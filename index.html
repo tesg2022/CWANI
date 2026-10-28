@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CWANI advances climate resilience, water security, sustainable agriculture and nature-positive development through geospatial artificial intelligence.">
+  <meta name="theme-color" content="#102d2a">
+  <title>CWANI | Climate, Water, Agriculture and Nature Intelligence</title>
+  <style>
+    :root {
+      --forest: #102d2a;
+      --forest-2: #17443d;
+      --green: #a8d66d;
+      --mint: #e7f1e7;
+      --cream: #f7f6ef;
+      --paper: #ffffff;
+      --ink: #18332f;
+      --muted: #647773;
+      --line: #dce6df;
+      --blue: #8ccbd0;
+      --radius: 22px;
+      --shadow: 0 18px 50px rgba(16, 45, 42, .10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .container { width: min(1160px, calc(100% - 44px)); margin: 0 auto; }
+    .topbar {
+      background: var(--forest);
+      color: #dbe9df;
+      font-size: .82rem;
+      padding: 9px 0;
+    }
+    .topbar-inner { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    .topbar strong { color: var(--green); font-weight: 700; }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(247, 246, 239, .94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(220,230,223,.8);
+    }
+    .nav { min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 26px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 220px; }
+    .brand-mark {
+      width: 45px; height: 45px; border-radius: 14px; display: grid; place-items: center;
+      background: var(--forest); color: var(--green); font-weight: 850; letter-spacing: -1px;
+      box-shadow: 0 8px 20px rgba(16,45,42,.18);
+    }
+    .brand-name { font-size: 1.1rem; font-weight: 850; letter-spacing: .02em; line-height: 1.1; }
+    .brand-sub { display: block; font-size: .66rem; color: var(--muted); font-weight: 650; letter-spacing: .08em; text-transform: uppercase; margin-top: 5px; }
+    .nav-links { display: flex; align-items: center; gap: 26px; font-size: .92rem; font-weight: 650; color: #35524c; }
+    .nav-links a:hover { color: #4f7f3a; }
+    .nav-cta, .button {
+      display: inline-flex; justify-content: center; align-items: center; gap: 9px;
+      border-radius: 999px; padding: 12px 19px; font-weight: 750; font-size: .92rem;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .nav-cta, .button-primary { background: var(--green); color: var(--forest); }
+    .nav-cta:hover, .button:hover { transform: translateY(-2px); }
+    .menu-toggle { display: none; border: 1px solid var(--line); background: white; border-radius: 12px; padding: 10px 12px; color: var(--forest); font-size: 1.2rem; }
+    .hero {
+      position: relative; overflow: hidden; background: var(--forest); color: white;
+      padding: 88px 0 84px;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(140,203,208,.20), transparent 28%),
+        radial-gradient(circle at 66% 90%, rgba(168,214,109,.18), transparent 32%);
+      pointer-events: none;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.12fr .88fr; align-items: center; gap: 62px; position: relative; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--green); font-weight: 800; font-size: .78rem; text-transform: uppercase; letter-spacing: .13em; }
+    .eyebrow::before { content: ""; width: 24px; height: 2px; background: currentColor; }
+    h1 { font-size: clamp(2.7rem, 5.3vw, 5.15rem); line-height: 1.02; letter-spacing: -.055em; margin: 20px 0 24px; max-width: 760px; }
+    h1 span { color: var(--green); }
+    .hero-copy { max-width: 620px; color: #d2e1d9; font-size: 1.12rem; margin: 0 0 30px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .button-secondary { border: 1px solid rgba(255,255,255,.28); color: white; background: rgba(255,255,255,.04); }
+    .button-secondary:hover { background: rgba(255,255,255,.1); }
+    .hero-note { display: flex; gap: 12px; align-items: center; color: #bdd0c6; font-size: .84rem; margin-top: 30px; }
+    .hero-note .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 0 5px rgba(168,214,109,.13); }
+    .visual-card { min-height: 410px; border: 1px solid rgba(255,255,255,.16); border-radius: 28px; padding: 22px; position: relative; overflow: hidden; background: linear-gradient(145deg, rgba(255,255,255,.10), rgba(255,255,255,.025)); }
+    .visual-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; position: relative; z-index: 2; }
+    .visual-label { color: #e1eee5; font-size: .8rem; font-weight: 700; }
+    .live-pill { border: 1px solid rgba(168,214,109,.45); border-radius: 99px; color: var(--green); padding: 5px 9px; font-size: .7rem; font-weight: 800; letter-spacing: .08em; }
+    .earth-art { position: absolute; width: 350px; height: 350px; border-radius: 50%; left: 50%; top: 49%; transform: translate(-50%,-50%); background: radial-gradient(circle at 34% 27%, #b9df9a 0 4%, #5e9b77 20%, #28665d 47%, #163d3a 68%); box-shadow: inset -25px -18px 50px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.1), 0 0 70px rgba(140,203,208,.13); }
+    .earth-art::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; opacity: .8;
+      background:
+        radial-gradient(ellipse at 28% 36%, #c5dc94 0 8%, transparent 8.5%),
+        radial-gradient(ellipse at 43% 28%, #8fc17c 0 10%, transparent 10.5%),
+        radial-gradient(ellipse at 64% 49%, #a6d28b 0 13%, transparent 13.5%),
+        radial-gradient(ellipse at 45% 68%, #78b17a 0 14%, transparent 14.5%),
+        radial-gradient(ellipse at 77% 73%, #8bc18a 0 7%, transparent 7.5%);
+      filter: blur(1px);
+    }
+    .earth-art::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: repeating-radial-gradient(ellipse at center, transparent 0 23px, rgba(203,239,211,.12) 24px 25px); }
+    .orbit { position: absolute; width: 420px; height: 150px; left: 50%; top: 49%; transform: translate(-50%,-50%) rotate(-27deg); border: 1px solid rgba(168,214,109,.45); border-radius: 50%; }
+    .orbit.two { transform: translate(-50%,-50%) rotate(49deg); width: 390px; height: 180px; border-color: rgba(140,203,208,.4); }
+    .orbit-dot { position: absolute; top: 26%; right: 16%; width: 12px; height: 12px; background: var(--green); border-radius: 50%; box-shadow: 0 0 20px var(--green); }
+    .metric { position: absolute; z-index: 3; background: rgba(12,39,36,.82); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(10px); padding: 13px 15px; border-radius: 15px; min-width: 140px; }
+    .metric strong { display: block; font-size: 1.35rem; color: var(--green); line-height: 1.2; }
+    .metric span { display: block; color: #d2e1d9; font-size: .72rem; margin-top: 5px; }
+    .metric.one { left: 18px; bottom: 28px; }
+    .metric.two { right: 18px; top: 105px; }
+    .metric.three { right: 28px; bottom: 25px; }
+    .section { padding: 88px 0; }
+    .section-head { max-width: 700px; margin-bottom: 38px; }
+    .kicker { color: #5d873d; font-size: .78rem; font-weight: 850; text-transform: uppercase; letter-spacing: .13em; }
+    h2 { font-size: clamp(2rem, 3.5vw, 3.25rem); line-height: 1.08; letter-spacing: -.04em; margin: 13px 0 17px; color: var(--forest); }
+    .section-head p { color: var(--muted); font-size: 1.05rem; margin: 0; }
+    .mission-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 58px; align-items: start; }
+    .mission-panel { background: var(--mint); border-radius: var(--radius); padding: 30px; border: 1px solid #d8e8d8; }
+    .mission-panel h3 { margin: 0 0 10px; font-size: 1.25rem; }
+    .mission-panel p { margin: 0; color: #516b62; }
+    .principles { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .principle { display: flex; gap: 13px; align-items: flex-start; }
+    .icon-box { width: 43px; height: 43px; flex: 0 0 43px; display: grid; place-items: center; background: white; border: 1px solid var(--line); border-radius: 13px; font-size: 1.2rem; }
+    .principle h3 { margin: 1px 0 6px; font-size: 1rem; }
+    .principle p { color: var(--muted); margin: 0; font-size: .9rem; }
+    .platforms { background: #eef2e9; }
+    .platform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .platform-card { background: white; border: 1px solid var(--line); border-radius: var(--radius); padding: 27px; display: flex; flex-direction: column; min-height: 310px; box-shadow: 0 8px 25px rgba(16,45,42,.035); transition: transform .2s ease, box-shadow .2s ease; }
+    .platform-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .platform-icon { display: grid; place-items: center; width: 54px; height: 54px; background: var(--mint); border-radius: 16px; font-size: 1.45rem; margin-bottom: 24px; }
+    .platform-card h3 { font-size: 1.3rem; letter-spacing: -.02em; margin: 0 0 8px; }
+    .platform-card .descriptor { color: #5d873d; font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 800; margin-bottom: 13px; }
+    .platform-card p { color: var(--muted); font-size: .93rem; margin: 0 0 23px; }
+    .platform-link { color: #315d36; font-weight: 800; font-size: .9rem; margin-top: auto; display: inline-flex; gap: 8px; align-items: center; }
+    .focus-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .focus-item { border-top: 2px solid var(--green); padding: 22px 18px 18px; background: white; border-radius: 0 0 15px 15px; }
+    .focus-item .number { font-size: .75rem; color: #71904f; font-weight: 850; letter-spacing: .1em; }
+    .focus-item h3 { font-size: 1.06rem; margin: 15px 0 8px; }
+    .focus-item p { font-size: .88rem; color: var(--muted); margin: 0; }
+    .approach { background: var(--forest); color: white; }
+    .approach h2 { color: white; }
+    .approach .section-head p { color: #c3d5cb; }
+    .approach .kicker { color: var(--green); }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: step; }
+    .step { border-top: 1px solid rgba(255,255,255,.23); padding-top: 20px; }
+    .step-num { color: var(--green); font-size: .78rem; font-weight: 850; letter-spacing: .12em; }
+    .step h3 { margin: 14px 0 8px; font-size: 1.1rem; }
+    .step p { margin: 0; color: #c3d5cb; font-size: .9rem; }
+    .cta-section { padding: 74px 0; }
+    .cta-panel { background: var(--green); border-radius: 28px; padding: 45px 48px; display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+    .cta-panel h2 { margin: 0 0 12px; max-width: 680px; }
+    .cta-panel p { color: #36543a; margin: 0; max-width: 680px; }
+    .cta-panel .button { background: var(--forest); color: white; white-space: nowrap; }
+    footer { background: #0b211f; color: #d2e1d9; padding: 52px 0 24px; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr .8fr .8fr; gap: 48px; padding-bottom: 38px; }
+    .footer-brand .brand-name { color: white; }
+    .footer-brand .brand-sub { color: #a7bcb2; }
+    .footer-brand p { max-width: 390px; color: #a7bcb2; font-size: .92rem; margin-top: 18px; }
+    footer h3 { color: white; font-size: .92rem; margin: 0 0 15px; }
+    .footer-links { display: grid; gap: 10px; color: #a7bcb2; font-size: .9rem; }
+    .footer-links a:hover { color: var(--green); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,.13); padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: #8ea69b; font-size: .8rem; }
+    :focus-visible { outline: 3px solid #8ccbd0; outline-offset: 3px; }
+    @media (max-width: 920px) {
+      .nav-links { gap: 16px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 42px; }
+      .visual-card { max-width: 600px; width: 100%; margin: 0 auto; }
+      .mission-grid { grid-template-columns: 1fr; gap: 28px; }
+      .platform-grid { grid-template-columns: 1fr 1fr; }
+      .focus-grid, .steps { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 32px, 1160px); }
+      .topbar-inner { justify-content: center; text-align: center; }
+      .nav { min-height: 70px; }
+      .brand { min-width: 0; }
+      .brand-mark { width: 40px; height: 40px; }
+      .brand-sub { font-size: .58rem; }
+      .menu-toggle { display: inline-flex; }
+      .nav-cta { display: none; }
+      .nav-links { display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid var(--line); padding: 18px 22px 24px; flex-direction: column; align-items: stretch; gap: 0; box-shadow: 0 18px 28px rgba(16,45,42,.08); }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 0; }
+      .hero { padding: 64px 0 60px; }
+      h1 { font-size: clamp(2.55rem, 12vw, 4rem); }
+      .hero-copy { font-size: 1rem; }
+      .visual-card { min-height: 340px; padding: 16px; }
+      .earth-art { width: 270px; height: 270px; }
+      .orbit { width: 320px; height: 120px; }
+      .orbit.two { width: 310px; height: 140px; }
+      .metric { min-width: 112px; padding: 10px 11px; }
+      .metric strong { font-size: 1.12rem; }
+      .metric span { font-size: .65rem; }
+      .metric.one { left: 12px; bottom: 17px; }
+      .metric.two { right: 12px; top: 76px; }
+      .metric.three { right: 12px; bottom: 17px; }
+      .section { padding: 64px 0; }
+      .principles, .platform-grid, .focus-grid, .steps, .footer-grid { grid-template-columns: 1fr; }
+      .platform-card { min-height: auto; }
+      .cta-section { padding: 50px 0; }
+      .cta-panel { padding: 30px 24px; flex-direction: column; align-items: flex-start; }
+      .footer-brand { grid-column: auto; }
+      .footer-grid { gap: 30px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span><strong>Geospatial AI for a resilient future</strong></span>
+      <span>Climate · Water · Agriculture · Nature</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="CWANI home">
+        <span class="brand-mark">CW</span>
+        <span>
+          <span class="brand-name">CWANI</span>
+          <span class="brand-sub">Climate, Water, Agriculture &amp; Nature Intelligence</span>
+        </span>
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#platforms">Our platforms</a>
+        <a href="#focus">Focus areas</a>
+        <a href="#approach">Our approach</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="nav-cta" href="#platforms">Explore our work <span aria-hidden="true">↗</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Intelligence for people and planet</div>
+          <h1>Turning Earth data into <span>real-world impact.</span></h1>
+          <p class="hero-copy">CWANI brings together geospatial science, Earth observation, hydrological modelling and artificial intelligence to strengthen water security, climate resilience, sustainable agriculture and nature-positive development.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#platforms">Discover our platforms <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary" href="#about">Learn about CWANI</a>
+          </div>
+          <div class="hero-note"><span class="dot"></span><span>Evidence-led insights. Practical tools. Resilient communities.</span></div>
+        </div>
+        <div class="visual-card" aria-label="Illustration representing connected Earth systems and environmental intelligence">
+          <div class="visual-top">
+            <span class="visual-label">Connected Earth systems</span>
+            <span class="live-pill">GEOAI · EO · AI</span>
+          </div>
+          <div class="earth-art"></div>
+          <div class="orbit"></div><div class="orbit two"></div><div class="orbit-dot"></div>
+          <div class="metric one"><strong>Climate</strong><span>Understand change</span></div>
+          <div class="metric two"><strong>Water</strong><span>Anticipate risk</span></div>
+          <div class="metric three"><strong>Nature</strong><span>Guide action</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container mission-grid">
+        <div class="section-head">
+          <div class="kicker">Who we are</div>
+          <h2>Intelligence that connects climate, water, food and nature.</h2>
+          <p>CWANI is an environmental intelligence initiative focused on translating complex geospatial and environmental data into useful knowledge for research, planning and decision-making.</p>
+        </div>
+        <div>
+          <div class="mission-panel">
+            <h3>Our mission</h3>
+            <p>To empower communities, researchers, public institutions and innovators with accessible, science-based intelligence that supports climate adaptation, sustainable resource management and inclusive development.</p>
+          </div>
+          <div class="principles" style="margin-top:24px">
+            <div class="principle">
+              <div class="icon-box" aria-hidden="true">⌁</div>
+              <div><h3>Science-led</h3><p>Grounded in environmental data, modelling and transparent methods.</p></div>
+            </div>
+            <div class="principle">
+              <div class="icon-box" aria-hidden="true">◎</div>
+              <div><h3>Geospatial by design</h3><p>Place-based insights from satellites, maps and spatial analytics.</p></div>
+            </div>
+            <div class="principle">
+              <div class="icon-box" aria-hidden="true">✳</div>
+              <div><h3>AI-enabled</h3><p>Predictive tools that help interpret patterns and assess future scenarios.</p></div>
+            </div>
+            <div class="principle">
+              <div class="icon-box" aria-hidden="true">↗</div>
+              <div><h3>Impact-focused</h3><p>Designed to inform practical choices and measurable outcomes.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section platforms" id="platforms">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Our innovation platforms</div>
+          <h2>Three platforms. One connected mission.</h2>
+          <p>Each platform focuses on a critical part of the climate–water–food–nature system, while contributing to a shared environmental intelligence ecosystem.</p>
+        </div>
+        <div class="platform-grid">
+          <article class="platform-card">
+            <div class="platform-icon" aria-hidden="true">🌿</div>
+            <div class="descriptor">Climate · Ecosystems · Biodiversity</div>
+            <h3>ClimateNatureAI</h3>
+            <p>Applies geospatial AI and Earth observation to climate adaptation, ecosystem monitoring, biodiversity insights and the prioritisation of nature-based solutions.</p>
+            <a class="platform-link" href="#focus">Explore focus areas <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="platform-card">
+            <div class="platform-icon" aria-hidden="true">🌦️</div>
+            <div class="descriptor">Climate · Water · Food systems</div>
+            <h3>ClimateWaterAgri AI</h3>
+            <p>Connects climate intelligence, water-resource assessment and agricultural analytics to support drought preparedness, irrigation planning and climate-smart food production.</p>
+            <a class="platform-link" href="#focus">Explore focus areas <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="platform-card">
+            <div class="platform-icon" aria-hidden="true">💧</div>
+            <div class="descriptor">Hydrology · Earth observation · GeoAI</div>
+            <h3>AquaGeoAI</h3>
+            <p>Integrates geospatial AI, Earth observation and hydrological modelling to inform water security, groundwater recharge, drought risk and sustainable water management.</p>
+            <a class="platform-link" href="#focus">Explore focus areas <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="focus">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">What we work on</div>
+          <h2>From environmental data to decisions.</h2>
+          <p>Our work connects observation, analysis and prediction to support more resilient landscapes and communities.</p>
+        </div>
+        <div class="focus-grid">
+          <article class="focus-item"><div class="number">01 / CLIMATE</div><h3>Climate resilience</h3><p>Climate variability analysis, forecasting, adaptation planning and drought-risk intelligence.</p></article>
+          <article class="focus-item"><div class="number">02 / WATER</div><h3>Water security</h3><p>Hydrological modelling, groundwater recharge, soil moisture, runoff and water availability.</p></article>
+          <article class="focus-item"><div class="number">03 / AGRICULTURE</div><h3>Sustainable agriculture</h3><p>Earth-observation insights for crop conditions, agricultural water use and climate-smart decisions.</p></article>
+          <article class="focus-item"><div class="number">04 / NATURE</div><h3>Nature-positive solutions</h3><p>Ecosystem monitoring, landscape assessment and spatial prioritisation of nature-based solutions.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section approach" id="approach">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Our approach</div>
+          <h2>Built on data. Guided by science. Focused on impact.</h2>
+          <p>CWANI combines complementary methods to turn environmental complexity into insights that people can use.</p>
+        </div>
+        <div class="steps">
+          <article class="step"><div class="step-num">STEP 01</div><h3>Observe</h3><p>Bring together satellite imagery, climate datasets, field observations and relevant spatial information.</p></article>
+          <article class="step"><div class="step-num">STEP 02</div><h3>Understand</h3><p>Use GIS, remote sensing and environmental models to identify patterns, risks and relationships.</p></article>
+          <article class="step"><div class="step-num">STEP 03</div><h3>Predict</h3><p>Apply appropriate AI and statistical methods to explore trends, forecasts and future scenarios.</p></article>
+          <article class="step"><div class="step-num">STEP 04</div><h3>Act</h3><p>Communicate results through maps, dashboards, decision-support tools and practical recommendations.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+      <div class="container">
+        <div class="cta-panel">
+          <div>
+            <div class="kicker">Collaborate with CWANI</div>
+            <h2>Let’s build more resilient futures together.</h2>
+            <p>We welcome collaboration with researchers, government, communities, NGOs, universities, funders and technology partners working across climate, water, agriculture and nature.</p>
+          </div>
+          <a class="button" href="mailto:your-email@example.org" aria-label="Email CWANI to discuss collaboration">Discuss collaboration <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#home">
+            <span class="brand-mark">CW</span>
+            <span><span class="brand-name">CWANI</span><span class="brand-sub">Climate, Water, Agriculture &amp; Nature Intelligence</span></span>
+          </a>
+          <p>Geospatial artificial intelligence for water security, climate resilience, sustainable agriculture and environmental stewardship.</p>
+        </div>
+        <div>
+          <h3>Explore</h3>
+          <div class="footer-links"><a href="#about">About CWANI</a><a href="#platforms">Our platforms</a><a href="#focus">Focus areas</a><a href="#approach">Our approach</a></div>
+        </div>
+        <div>
+          <h3>Our platforms</h3>
+          <div class="footer-links"><a href="#platforms">ClimateNatureAI</a><a href="#platforms">ClimateWaterAgri AI</a><a href="#platforms">AquaGeoAI</a><a href="#contact">Partnerships</a></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> CWANI. All rights reserved.</span>
+        <span>Science · Spatial intelligence · Sustainable futures</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+      menuToggle.textContent = isOpen ? '×' : '☰';
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Open navigation menu');
+        menuToggle.textContent = '☰';
+      });
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
